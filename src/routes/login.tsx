@@ -40,9 +40,7 @@ function Login() {
   };
 
   const google = async () => {
-    const { lovable } = await import("@/integrations/lovable/index").catch(() => ({ lovable: null as never }));
-    if (!lovable) { toast.error("Google sign-in not configured yet"); return; }
-    await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    toast.info("Google sign-in coming soon");
   };
 
   return (
