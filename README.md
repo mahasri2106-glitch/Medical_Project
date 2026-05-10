@@ -29,7 +29,7 @@ Demo account:
 ```bash
 cd apps/mobile
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:7860/api/v1
+flutter run -d chrome
 ```
 
 For Flutter web testing on the same machine:
