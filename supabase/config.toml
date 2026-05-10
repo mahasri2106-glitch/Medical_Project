@@ -1,0 +1,4 @@
+project_id = "ljdblrknhcepdcfwrfqe"
+
+[functions.read-prescription]
+verify_jwt = false
