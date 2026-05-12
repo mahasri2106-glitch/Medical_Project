@@ -129,6 +129,20 @@ def seed_data(connection: sqlite3.Connection) -> None:
             now,
         ),
     )
+    connection.execute(
+        """
+        INSERT OR IGNORE INTO users (id, name, email, password_hash, role, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "user-demo-admin",
+            "System Admin",
+            "admin@medbill.com",
+            hash_password("Secure@123"),
+            "admin",
+            now,
+        ),
+    )
     for item in MEDICINES:
         connection.execute(
             """

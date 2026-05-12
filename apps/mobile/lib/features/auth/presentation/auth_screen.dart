@@ -18,7 +18,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _isSignup = false;
-  bool _isAdmin = false;
 
   @override
   void dispose() {
@@ -34,7 +33,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     ref.listen(authControllerProvider, (previous, next) {
       if (next.value != null) {
-        if (_isAdmin) {
+        if (next.value!.role == UserRole.admin) {
           context.go('/admin');
         } else {
           context.go('/');
@@ -66,23 +65,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           fontWeight: FontWeight.w900,
                         ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      ChoiceChip(
-                        label: const Text('Employee (User)'),
-                        selected: !_isAdmin,
-                        onSelected: (val) => setState(() => _isAdmin = !val),
-                      ),
-                      const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: const Text('Admin'),
-                        selected: _isAdmin,
-                        onSelected: (val) => setState(() => _isAdmin = val),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 14),
                   Text(
                     'Login to shop medicines, save health records, and place orders.',
                     style: Theme.of(context).textTheme.bodyMedium,
