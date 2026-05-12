@@ -4,6 +4,7 @@ class PremiumCard extends StatelessWidget {
   const PremiumCard({
     required this.child,
     this.padding = const EdgeInsets.all(16),
+    this.margin,
     this.onTap,
     this.color,
     super.key,
@@ -11,6 +12,7 @@ class PremiumCard extends StatelessWidget {
 
   final Widget child;
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? margin;
   final VoidCallback? onTap;
   final Color? color;
 
@@ -20,6 +22,7 @@ class PremiumCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       curve: Curves.easeOutCubic,
+      margin: margin,
       decoration: BoxDecoration(
         color: color ?? Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),

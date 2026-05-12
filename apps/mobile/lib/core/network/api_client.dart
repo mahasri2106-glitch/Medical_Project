@@ -69,6 +69,19 @@ class ApiClient {
     return response.data ?? <String, dynamic>{};
   }
 
+  Future<Map<String, dynamic>> patchJson(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? query,
+  }) async {
+    final response = await _dio.patch<Map<String, dynamic>>(
+      path,
+      data: data,
+      queryParameters: query,
+    );
+    return response.data ?? <String, dynamic>{};
+  }
+
   Future<void> delete(String path) => _dio.delete<void>(path);
 }
 

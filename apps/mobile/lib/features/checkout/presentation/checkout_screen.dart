@@ -9,6 +9,7 @@ import '../../../core/widgets/responsive_center.dart';
 import '../../cart/presentation/cart_controller.dart';
 
 import '../../profile/data/profile_repository.dart';
+import '../../orders/data/order_repository.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
@@ -76,13 +77,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (items.isEmpty) return;
     setState(() => _loading = true);
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final total = ref.read(cartTotalProvider);
+      final address = _address.text;
+      
+      await ref.read(orderRepositoryProvider).createOrder(total, address, items);
+      
       if (mounted) {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) => AlertDialog(
             title: const Text('Order Placed'),
-            content: const Text('Your order has been placed successfully.'),
+            content: const Text('Your order has been placed successfully and is pending admin approval.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -94,6 +100,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               ),
             ],
           ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error placing order: $e')),
         );
       }
     } finally {

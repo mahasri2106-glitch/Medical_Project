@@ -50,6 +50,16 @@ class OrderPayload(BaseModel):
     items: list[dict] = Field(default_factory=list)
 
 
+class AppointmentPayload(BaseModel):
+    doctor_name: str
+    specialty: str
+    fee: float
+
+
+class StatusUpdatePayload(BaseModel):
+    status: str
+
+
 class RecordPayload(BaseModel):
     title: str
     record_type: str
@@ -80,6 +90,12 @@ def current_user(
 def require_user(user: dict | None = Depends(current_user)) -> dict:
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
+    return user
+
+
+def require_admin(user: dict = Depends(require_user)) -> dict:
+    if user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin privileges required")
     return user
 
 
@@ -227,6 +243,70 @@ def health_records(
     ).fetchall()
     return {"success": True, "data": [dict(row) for row in rows]}
 
+@app.get(f"{API_PREFIX}/admin/orders")
+def admin_orders(
+    _admin: dict = Depends(require_admin),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    rows = connection.execute("SELECT orders.*, users.name as user_name FROM orders JOIN users ON orders.user_id = users.id ORDER BY orders.created_at DESC").fetchall()
+    return {"success": True, "data": [dict(row) | {"items": json.loads(row["items"])} for row in rows]}
+
+
+@app.patch(f"{API_PREFIX}/admin/orders/{{order_id}}/status")
+def update_order_status(
+    order_id: str,
+    payload: StatusUpdatePayload,
+    _admin: dict = Depends(require_admin),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    connection.execute("UPDATE orders SET status = ? WHERE id = ?", (payload.status, order_id))
+    return {"success": True}
+
+
+@app.post(f"{API_PREFIX}/appointments")
+def create_appointment(
+    payload: AppointmentPayload,
+    user: dict = Depends(require_user),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    appointment_id = new_id("appt")
+    connection.execute(
+        """
+        INSERT INTO appointments (id, user_id, doctor_name, specialty, fee, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (appointment_id, user["id"], payload.doctor_name, payload.specialty, payload.fee, "pending", utc_now()),
+    )
+    return {"success": True, "data": {"id": appointment_id, "status": "pending"}}
+
+
+@app.get(f"{API_PREFIX}/appointments")
+def user_appointments(
+    user: dict = Depends(require_user),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    rows = connection.execute("SELECT * FROM appointments WHERE user_id = ? ORDER BY created_at DESC", (user["id"],)).fetchall()
+    return {"success": True, "data": [dict(row) for row in rows]}
+
+
+@app.get(f"{API_PREFIX}/admin/appointments")
+def admin_appointments(
+    _admin: dict = Depends(require_admin),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    rows = connection.execute("SELECT appointments.*, users.name as user_name FROM appointments JOIN users ON appointments.user_id = users.id ORDER BY appointments.created_at DESC").fetchall()
+    return {"success": True, "data": [dict(row) for row in rows]}
+
+
+@app.patch(f"{API_PREFIX}/admin/appointments/{{appointment_id}}/status")
+def update_appointment_status(
+    appointment_id: str,
+    payload: StatusUpdatePayload,
+    _admin: dict = Depends(require_admin),
+    connection: sqlite3.Connection = Depends(db),
+) -> dict:
+    connection.execute("UPDATE appointments SET status = ? WHERE id = ?", (payload.status, appointment_id))
+    return {"success": True}
 
 @app.post(f"{API_PREFIX}/prescriptions/analyze")
 async def analyze_prescription(file: UploadFile = File(...)) -> dict:

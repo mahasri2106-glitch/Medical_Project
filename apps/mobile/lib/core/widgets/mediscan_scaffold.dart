@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/cart/presentation/cart_controller.dart';
+import '../../features/auth/data/auth_repository.dart';
 
 class MediScanScaffold extends ConsumerWidget {
   const MediScanScaffold({
@@ -139,6 +140,12 @@ class MediScanScaffold extends ConsumerWidget {
                         onPressed: () => context.go('/profile'),
                         icon: const Icon(Icons.person_outline),
                       ),
+                      if (ref.watch(authControllerProvider).value?.role == UserRole.admin)
+                        IconButton(
+                          tooltip: 'Admin Dashboard',
+                          onPressed: () => context.go('/admin'),
+                          icon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFF009B8E)),
+                        ),
                       ...?actions,
                     ],
                   ),

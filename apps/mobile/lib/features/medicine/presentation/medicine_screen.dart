@@ -9,6 +9,8 @@ import '../../../core/widgets/section_header.dart';
 import '../../cart/presentation/cart_controller.dart';
 import '../data/demo_catalog.dart';
 import '../data/medicine_repository.dart';
+import '../data/medicine_image_service.dart';
+import '../../auth/data/auth_repository.dart';
 
 class MedicineScreen extends ConsumerWidget {
   const MedicineScreen({super.key});
@@ -17,6 +19,7 @@ class MedicineScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final medicinesState = ref.watch(medicinesProvider);
     final medicines = medicinesState.value ?? demoMedicines;
+    final medicalImages = ref.watch(medicalImagesProvider).value ?? [];
     final selectedCategory = ref.watch(medicineCategoryProvider);
     final width = MediaQuery.sizeOf(context).width;
     final columns = width > 980 ? 4 : (width > 640 ? 3 : 2);
@@ -49,6 +52,17 @@ class MedicineScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
+                      IconButton(
+                        tooltip: 'Profile',
+                        onPressed: () => context.go('/profile'),
+                        icon: const Icon(Icons.person_outline),
+                      ),
+                      if (ref.watch(authControllerProvider).value?.role == UserRole.admin)
+                        IconButton(
+                          tooltip: 'Admin Dashboard',
+                          onPressed: () => context.go('/admin'),
+                          icon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFF009B8E)),
+                        ),
                       OutlinedButton.icon(
                         onPressed: () => context.go('/prescription'),
                         icon: const Icon(Icons.description_outlined),
@@ -88,11 +102,11 @@ class MedicineScreen extends ConsumerWidget {
                             child: ChoiceChip(
                               label: Text(category),
                               selected: selectedCategory == category,
-                              onSelected: (_) => ref
+                              onSelected: (selected) => ref
                                   .read(
                                     medicineCategoryProvider.notifier,
                                   )
-                                  .state = category,
+                                  .state = selected ? category : null,
                             ),
                           ),
                         ),
@@ -157,7 +171,9 @@ class MedicineScreen extends ConsumerWidget {
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: Image.network(
-                                    medicine.imageUrl,
+                                    medicalImages.isNotEmpty 
+                                      ? medicalImages[index % medicalImages.length] 
+                                      : medicine.imageUrl,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) =>
                                         const Icon(Icons.medication_liquid, size: 44),

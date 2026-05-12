@@ -90,6 +90,16 @@ CREATE TABLE IF NOT EXISTS health_records (
   created_at TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+CREATE TABLE IF NOT EXISTS appointments (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  doctor_name TEXT NOT NULL,
+  specialty TEXT NOT NULL,
+  fee REAL NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
 """
 
 

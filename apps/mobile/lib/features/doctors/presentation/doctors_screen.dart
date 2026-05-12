@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/appointment_repository.dart';
 
 import '../../../core/widgets/mediscan_scaffold.dart';
 import '../../../core/widgets/premium_card.dart';
 import '../../../core/widgets/responsive_center.dart';
 
-class DoctorsScreen extends StatefulWidget {
+class DoctorsScreen extends ConsumerStatefulWidget {
   const DoctorsScreen({super.key});
 
   @override
-  State<DoctorsScreen> createState() => _DoctorsScreenState();
+  ConsumerState<DoctorsScreen> createState() => _DoctorsScreenState();
 }
 
-class _DoctorsScreenState extends State<DoctorsScreen> {
+class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
   String _filter = '';
   String _symptom = '';
 
@@ -217,21 +219,36 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                                       child: const Text('Cancel'),
                                     ),
                                     FilledButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.pop(context); // close questionnaire
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text('Consultation Booked'),
-                                            content: Text('Your consultation with ${doctor.$1} has been booked successfully.'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                child: const Text('OK'),
+                                        try {
+                                          await ref.read(appointmentRepositoryProvider).createAppointment(
+                                            doctor.$1, 
+                                            doctor.$2, 
+                                            doctor.$5.toDouble(),
+                                          );
+                                          if (mounted) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text('Consultation Booked'),
+                                                content: Text('Your consultation with ${doctor.$1} has been booked successfully and is pending admin approval.'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pop(context),
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        );
+                                            );
+                                          }
+                                        } catch (e) {
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Error booking appointment: $e')),
+                                            );
+                                          }
+                                        }
                                       },
                                       child: const Text('Confirm'),
                                     ),
