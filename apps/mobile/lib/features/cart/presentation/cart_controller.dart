@@ -57,6 +57,10 @@ class CartController extends StateNotifier<List<CartLine>> {
     );
     add(medicine);
   }
+
+  void clear() {
+    state = const [];
+  }
 }
 
 final cartControllerProvider =

@@ -14,10 +14,11 @@ class AuthScreen extends ConsumerStatefulWidget {
 }
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
-  final _name = TextEditingController(text: 'Aarav Mehta');
-  final _email = TextEditingController(text: 'aarav@medbill.com');
-  final _password = TextEditingController(text: 'Secure@123');
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
   bool _isSignup = false;
+  bool _isAdmin = false;
 
   @override
   void dispose() {
@@ -32,7 +33,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final authState = ref.watch(authControllerProvider);
 
     ref.listen(authControllerProvider, (previous, next) {
-      if (next.value != null) context.go('/');
+      if (next.value != null) {
+        if (_isAdmin) {
+          context.go('/admin');
+        } else {
+          context.go('/');
+        }
+      }
     });
 
     return Scaffold(
@@ -58,6 +65,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w900,
                         ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      ChoiceChip(
+                        label: const Text('Employee (User)'),
+                        selected: !_isAdmin,
+                        onSelected: (val) => setState(() => _isAdmin = !val),
+                      ),
+                      const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: const Text('Admin'),
+                        selected: _isAdmin,
+                        onSelected: (val) => setState(() => _isAdmin = val),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -120,13 +143,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     label: Text(_isSignup ? 'Create account' : 'Login'),
                   ),
                   const SizedBox(height: 10),
-                  OutlinedButton.icon(
-                    onPressed: () =>
-                        ref.read(authControllerProvider.notifier).demoLogin(),
-                    icon: const Icon(Icons.bolt_outlined),
-                    label: const Text('Continue with demo customer'),
-                  ),
-                  const SizedBox(height: 8),
                   Row(
                     children: [
                       TextButton(

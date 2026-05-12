@@ -196,7 +196,49 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                             ),
                           ),
                           FilledButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Consultation Questionnaire'),
+                                  content: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Please describe your symptoms briefly:'),
+                                      TextField(),
+                                      SizedBox(height: 12),
+                                      Text('Any ongoing medical conditions?'),
+                                      TextField(),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () {
+                                        Navigator.pop(context); // close questionnaire
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Consultation Booked'),
+                                            content: Text('Your consultation with ${doctor.$1} has been booked successfully.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(context),
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Confirm'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                             icon: const Icon(Icons.video_call, size: 18),
                             label: const Text('Consult'),
                           ),

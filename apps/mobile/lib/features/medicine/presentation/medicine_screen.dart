@@ -109,11 +109,11 @@ class MedicineScreen extends ConsumerWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: medicines.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
-                      childAspectRatio: .64,
+                      mainAxisExtent: 330,
                     ),
                     itemBuilder: (context, index) {
                       final medicine = medicines[index];
@@ -133,9 +133,12 @@ class MedicineScreen extends ConsumerWidget {
                                   ).colorScheme.surfaceContainerHighest,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Icon(
-                                  Icons.medication_liquid,
-                                  size: 44,
+                                clipBehavior: Clip.antiAlias,
+                                child: Image.network(
+                                  medicine.imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.medication_liquid, size: 44),
                                 ),
                               ),
                             ),

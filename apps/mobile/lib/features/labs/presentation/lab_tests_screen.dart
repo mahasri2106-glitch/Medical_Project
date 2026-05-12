@@ -157,7 +157,49 @@ class _LabTestsScreenState extends State<LabTestsScreen> {
                           ],
                         ),
                       ),
-                      FilledButton(onPressed: () {}, child: const Text('Book')),
+                      FilledButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Lab Booking Details'),
+                              content: const Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Any specific instructions for sample collector?'),
+                                  TextField(),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                FilledButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Lab Test Booked'),
+                                        content: Text('Your lab test for ${test.$1} has been booked successfully.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('Confirm'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Text('Book'),
+                      ),
                     ],
                   ),
                 ),

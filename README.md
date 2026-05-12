@@ -19,9 +19,14 @@ python app.py
 
 Backend runs at `http://localhost:7860`.
 
-Demo account:
+**Demo Accounts (Use these to test):**
 
+*Employee (User) Login:*
 - Email: `aarav@medbill.com`
+- Password: `Secure@123`
+
+*Admin Login:*
+- Email: `admin@medbill.com` (or any email when Admin is toggled)
 - Password: `Secure@123`
 
 ## Flutter
@@ -32,7 +37,7 @@ flutter pub get
 flutter run -d chrome
 ```
 
-For Flutter web testing on the same machine:
+For Flutter web testing on the same machine, if you experience connection timeouts or CORS issues, ensure you specify your local API URL correctly:
 
 ```bash
 flutter run -d chrome --dart-define=API_BASE_URL=http://127.0.0.1:7860/api/v1

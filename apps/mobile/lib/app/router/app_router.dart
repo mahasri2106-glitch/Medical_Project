@@ -15,13 +15,15 @@ import '../../features/orders/presentation/orders_screen.dart';
 import '../../features/prescription/presentation/prescription_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/records/presentation/records_screen.dart';
+import '../../features/admin/presentation/admin_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/auth',
     routes: [
       GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
       GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
+      GoRoute(path: '/admin', builder: (context, state) => const AdminScreen()),
       GoRoute(
         path: '/medicines',
         builder: (context, state) => const MedicineScreen(),

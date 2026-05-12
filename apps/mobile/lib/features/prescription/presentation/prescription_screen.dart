@@ -20,7 +20,8 @@ class PrescriptionScreen extends ConsumerStatefulWidget {
 }
 
 class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
-  File? _file;
+  String? _fileName;
+  List<int>? _fileBytes;
   PrescriptionAnalysis? _analysis;
   bool _loading = false;
 
@@ -28,8 +29,10 @@ class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: source, imageQuality: 88);
     if (picked == null) return;
+    final bytes = await picked.readAsBytes();
     setState(() {
-      _file = File(picked.path);
+      _fileName = picked.name;
+      _fileBytes = bytes;
       _analysis = null;
     });
   }
@@ -39,23 +42,24 @@ class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
       type: FileType.custom,
       allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
     );
-    final path = result?.files.single.path;
-    if (path == null) return;
+    if (result == null) return;
+    final file = result.files.single;
+    List<int>? bytes = file.bytes;
+    if (bytes == null && file.path != null) {
+      bytes = await File(file.path!).readAsBytes();
+    }
     setState(() {
-      _file = File(path);
+      _fileName = file.name;
+      _fileBytes = bytes;
       _analysis = null;
     });
   }
 
   Future<void> _analyze() async {
+    if (_fileBytes == null || _fileName == null) return;
     setState(() => _loading = true);
     try {
-      if (_file == null) {
-        _analysis = ref.read(prescriptionRepositoryProvider).demoAnalysis();
-      } else {
-        _analysis =
-            await ref.read(prescriptionRepositoryProvider).analyzeFile(_file!);
-      }
+      _analysis = await ref.read(prescriptionRepositoryProvider).analyzeBytes(_fileBytes!, _fileName!);
     } catch (_) {
       _analysis = ref.read(prescriptionRepositoryProvider).demoAnalysis();
     } finally {
@@ -108,7 +112,7 @@ class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
                       ).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: _file == null
+                    child: _fileName == null
                         ? const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -123,7 +127,7 @@ class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
                               const Icon(Icons.description, size: 54),
                               const SizedBox(height: 10),
                               Text(
-                                _file!.path.split(Platform.pathSeparator).last,
+                                _fileName!,
                                 textAlign: TextAlign.center,
                               ),
                             ],

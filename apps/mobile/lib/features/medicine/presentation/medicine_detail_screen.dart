@@ -46,12 +46,17 @@ class MedicineDetailScreen extends ConsumerWidget {
                 children: [
                   Container(
                     height: 180,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Center(
-                      child: Icon(Icons.medication, size: 86),
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.network(
+                      medicine.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Center(child: Icon(Icons.medication, size: 86)),
                     ),
                   ),
                   const SizedBox(height: 18),

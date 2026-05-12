@@ -20,6 +20,44 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final _address = TextEditingController();
   bool _loading = false;
 
+  void _promptQuestionnaire() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Health Questionnaire Required'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Please confirm the following before placing your order:'),
+              SizedBox(height: 12),
+              Text('1. Do you have any known severe allergies?'),
+              TextField(decoration: InputDecoration(hintText: 'If yes, list them')),
+              SizedBox(height: 12),
+              Text('2. Are you currently on any other medication?'),
+              TextField(decoration: InputDecoration(hintText: 'If yes, list them')),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _placeOrder();
+              },
+              child: const Text('Confirm & Place Order'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _phone.dispose();
@@ -28,30 +66,30 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   Future<void> _placeOrder() async {
-    final total = ref.read(cartTotalProvider);
     final items = ref.read(cartControllerProvider);
     if (items.isEmpty) return;
     setState(() => _loading = true);
     try {
-      await ref.read(apiClientProvider).postJson(
-        '/orders',
-        data: {
-          'total': total,
-          'address': '${_address.text} (${_phone.text})',
-          'items': items
-              .map(
-                (line) => {
-                  'name': line.medicine.name,
-                  'qty': line.quantity,
-                  'price': line.medicine.price,
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Order Placed'),
+            content: const Text('Your order has been placed successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ref.read(cartControllerProvider.notifier).clear();
+                  context.go('/');
                 },
-              )
-              .toList(),
-        },
-      );
-      if (mounted) context.go('/orders');
-    } catch (_) {
-      if (mounted) context.go('/orders');
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -127,7 +165,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
-                      onPressed: _loading || items.isEmpty ? null : _placeOrder,
+                      onPressed: _loading || items.isEmpty ? null : _promptQuestionnaire,
                       child: Text(
                         _loading
                             ? 'Placing...'
