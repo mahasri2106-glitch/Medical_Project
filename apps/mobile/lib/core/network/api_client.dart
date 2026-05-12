@@ -64,6 +64,11 @@ class ApiClient {
     return response.data ?? <String, dynamic>{};
   }
 
+  Future<Map<String, dynamic>> postFormData(String path, FormData data) async {
+    final response = await _dio.post<Map<String, dynamic>>(path, data: data);
+    return response.data ?? <String, dynamic>{};
+  }
+
   Future<Map<String, dynamic>> putJson(String path, {Object? data}) async {
     final response = await _dio.put<Map<String, dynamic>>(path, data: data);
     return response.data ?? <String, dynamic>{};

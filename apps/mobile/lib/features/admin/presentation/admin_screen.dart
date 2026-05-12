@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/premium_card.dart';
-import '../../../core/widgets/responsive_center.dart';
 import '../../auth/data/auth_repository.dart';
-import '../../orders/data/order_repository.dart';
 import '../../doctors/data/appointment_repository.dart';
+import '../../orders/data/order_repository.dart';
 
 class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
@@ -17,9 +16,14 @@ class AdminScreen extends ConsumerWidget {
     final appointmentsAsync = ref.watch(adminAppointmentsProvider);
 
     // Calculate stats
-    final pendingOrders = ordersAsync.value?.where((o) => o.status == 'placed').length ?? 0;
-    final pendingAppts = appointmentsAsync.value?.where((a) => a.status == 'pending').length ?? 0;
-    final totalRevenue = ordersAsync.value?.fold<double>(0, (sum, o) => sum + (o.status == 'approved' ? o.total : 0)) ?? 0;
+    final pendingOrders =
+        ordersAsync.value?.where((o) => o.status == 'placed').length ?? 0;
+    final pendingAppts =
+        appointmentsAsync.value?.where((a) => a.status == 'pending').length ??
+            0;
+    final totalRevenue = ordersAsync.value?.fold<double>(
+            0, (sum, o) => sum + (o.status == 'approved' ? o.total : 0)) ??
+        0;
 
     return DefaultTabController(
       length: 2,
@@ -165,38 +169,45 @@ class _OrdersList extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Order #${order.id.split('_').last}',
-                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                           _StatusChip(status: order.status),
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text('Customer: ${order.userName ?? 'Unknown User'}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                      Text('Customer: ${order.userName ?? 'Unknown User'}',
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
                       Text('Total: ₹${order.total.toStringAsFixed(2)}'),
                       Text('Address: ${order.address}'),
                       const Divider(),
-                      ...order.items.map((item) => Text('• ${item['name']} x ${item['quantity']}')),
+                      ...order.items.map((item) =>
+                          Text('• ${item['name']} x ${item['quantity']}')),
                       if (order.status == 'placed') ...[
                         const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
                               child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                                style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red),
                                 onPressed: () => ref
                                     .read(orderRepositoryProvider)
                                     .updateOrderStatus(order.id, 'rejected')
-                                    .then((_) => ref.invalidate(adminOrdersProvider)),
+                                    .then((_) =>
+                                        ref.invalidate(adminOrdersProvider)),
                                 child: const Text('Reject'),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: FilledButton(
-                                style: FilledButton.styleFrom(backgroundColor: Colors.green),
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.green),
                                 onPressed: () => ref
                                     .read(orderRepositoryProvider)
                                     .updateOrderStatus(order.id, 'approved')
-                                    .then((_) => ref.invalidate(adminOrdersProvider)),
+                                    .then((_) =>
+                                        ref.invalidate(adminOrdersProvider)),
                                 child: const Text('Approve'),
                               ),
                             ),
@@ -237,12 +248,14 @@ class _AppointmentsList extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Doctor: ${appt.doctorName}',
-                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                           _StatusChip(status: appt.status),
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text('Customer: ${appt.userName ?? 'Unknown User'}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                      Text('Customer: ${appt.userName ?? 'Unknown User'}',
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
                       Text('Specialty: ${appt.specialty}'),
                       Text('Fee: ₹${appt.fee}'),
                       const Divider(),
@@ -252,22 +265,28 @@ class _AppointmentsList extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                                style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red),
                                 onPressed: () => ref
                                     .read(appointmentRepositoryProvider)
-                                    .updateAppointmentStatus(appt.id, 'cancelled')
-                                    .then((_) => ref.invalidate(adminAppointmentsProvider)),
+                                    .updateAppointmentStatus(
+                                        appt.id, 'cancelled')
+                                    .then((_) => ref
+                                        .invalidate(adminAppointmentsProvider)),
                                 child: const Text('Cancel'),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: FilledButton(
-                                style: FilledButton.styleFrom(backgroundColor: Colors.blue),
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.blue),
                                 onPressed: () => ref
                                     .read(appointmentRepositoryProvider)
-                                    .updateAppointmentStatus(appt.id, 'confirmed')
-                                    .then((_) => ref.invalidate(adminAppointmentsProvider)),
+                                    .updateAppointmentStatus(
+                                        appt.id, 'confirmed')
+                                    .then((_) => ref
+                                        .invalidate(adminAppointmentsProvider)),
                                 child: const Text('Confirm'),
                               ),
                             ),
@@ -313,7 +332,8 @@ class _StatusChip extends StatelessWidget {
       ),
       child: Text(
         status.toUpperCase(),
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -37,7 +37,8 @@ class OrdersScreen extends StatelessWidget {
               ),
               Text(
                 'Track Order $orderId',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 24),
               Expanded(
@@ -132,7 +133,8 @@ class OrdersScreen extends StatelessWidget {
                             ),
                           ),
                           FilledButton.tonal(
-                            onPressed: () => _showTrackingTimeline(context, order.$1),
+                            onPressed: () =>
+                                _showTrackingTimeline(context, order.$1),
                             child: const Text('Track'),
                           ),
                         ],
@@ -215,7 +217,9 @@ class _TimelineItem extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: isCurrent ? FontWeight.w900 : FontWeight.bold,
-                    color: isCurrent ? Theme.of(context).colorScheme.primary : null,
+                    color: isCurrent
+                        ? Theme.of(context).colorScheme.primary
+                        : null,
                   ),
                 ),
                 Text(

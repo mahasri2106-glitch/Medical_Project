@@ -202,11 +202,13 @@ class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: const Text('Consultation Questionnaire'),
+                                  title:
+                                      const Text('Consultation Questionnaire'),
                                   content: const Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text('Please describe your symptoms briefly:'),
+                                      Text(
+                                          'Please describe your symptoms briefly:'),
                                       TextField(),
                                       SizedBox(height: 12),
                                       Text('Any ongoing medical conditions?'),
@@ -220,22 +222,29 @@ class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
                                     ),
                                     FilledButton(
                                       onPressed: () async {
-                                        Navigator.pop(context); // close questionnaire
+                                        Navigator.pop(
+                                            context); // close questionnaire
                                         try {
-                                          await ref.read(appointmentRepositoryProvider).createAppointment(
-                                            doctor.$1, 
-                                            doctor.$2, 
-                                            doctor.$5.toDouble(),
-                                          );
+                                          await ref
+                                              .read(
+                                                  appointmentRepositoryProvider)
+                                              .createAppointment(
+                                                doctor.$1,
+                                                doctor.$2,
+                                                doctor.$5.toDouble(),
+                                              );
                                           if (mounted) {
                                             showDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
-                                                title: const Text('Consultation Booked'),
-                                                content: Text('Your consultation with ${doctor.$1} has been booked successfully and is pending admin approval.'),
+                                                title: const Text(
+                                                    'Consultation Booked'),
+                                                content: Text(
+                                                    'Your consultation with ${doctor.$1} has been booked successfully and is pending admin approval.'),
                                                 actions: [
                                                   TextButton(
-                                                    onPressed: () => Navigator.pop(context),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
                                                     child: const Text('OK'),
                                                   ),
                                                 ],
@@ -244,8 +253,11 @@ class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
                                           }
                                         } catch (e) {
                                           if (mounted) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(content: Text('Error booking appointment: $e')),
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      'Error booking appointment: $e')),
                                             );
                                           }
                                         }

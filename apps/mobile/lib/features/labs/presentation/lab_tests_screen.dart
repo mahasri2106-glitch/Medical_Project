@@ -166,7 +166,8 @@ class _LabTestsScreenState extends State<LabTestsScreen> {
                               content: const Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Any specific instructions for sample collector?'),
+                                  Text(
+                                      'Any specific instructions for sample collector?'),
                                   TextField(),
                                 ],
                               ),
@@ -182,10 +183,12 @@ class _LabTestsScreenState extends State<LabTestsScreen> {
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         title: const Text('Lab Test Booked'),
-                                        content: Text('Your lab test for ${test.$1} has been booked successfully.'),
+                                        content: Text(
+                                            'Your lab test for ${test.$1} has been booked successfully.'),
                                         actions: [
                                           TextButton(
-                                            onPressed: () => Navigator.pop(context),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
                                             child: const Text('OK'),
                                           ),
                                         ],

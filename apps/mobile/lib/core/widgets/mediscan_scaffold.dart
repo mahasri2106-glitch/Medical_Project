@@ -140,11 +140,13 @@ class MediScanScaffold extends ConsumerWidget {
                         onPressed: () => context.go('/profile'),
                         icon: const Icon(Icons.person_outline),
                       ),
-                      if (ref.watch(authControllerProvider).value?.role == UserRole.admin)
+                      if (ref.watch(authControllerProvider).value?.role ==
+                          UserRole.admin)
                         IconButton(
                           tooltip: 'Admin Dashboard',
                           onPressed: () => context.go('/admin'),
-                          icon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFF009B8E)),
+                          icon: const Icon(Icons.admin_panel_settings_outlined,
+                              color: Color(0xFF009B8E)),
                         ),
                       ...?actions,
                     ],

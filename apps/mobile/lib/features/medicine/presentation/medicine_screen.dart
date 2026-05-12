@@ -6,11 +6,11 @@ import '../../../core/widgets/mediscan_scaffold.dart';
 import '../../../core/widgets/premium_card.dart';
 import '../../../core/widgets/responsive_center.dart';
 import '../../../core/widgets/section_header.dart';
+import '../../auth/data/auth_repository.dart';
 import '../../cart/presentation/cart_controller.dart';
 import '../data/demo_catalog.dart';
-import '../data/medicine_repository.dart';
 import '../data/medicine_image_service.dart';
-import '../../auth/data/auth_repository.dart';
+import '../data/medicine_repository.dart';
 
 class MedicineScreen extends ConsumerWidget {
   const MedicineScreen({super.key});
@@ -21,8 +21,6 @@ class MedicineScreen extends ConsumerWidget {
     final medicines = medicinesState.value ?? demoMedicines;
     final medicalImages = ref.watch(medicalImagesProvider).value ?? [];
     final selectedCategory = ref.watch(medicineCategoryProvider);
-    final width = MediaQuery.sizeOf(context).width;
-    final columns = width > 980 ? 4 : (width > 640 ? 3 : 2);
 
     return MediScanScaffold(
       selectedIndex: 1,
@@ -57,11 +55,13 @@ class MedicineScreen extends ConsumerWidget {
                         onPressed: () => context.go('/profile'),
                         icon: const Icon(Icons.person_outline),
                       ),
-                      if (ref.watch(authControllerProvider).value?.role == UserRole.admin)
+                      if (ref.watch(authControllerProvider).value?.role ==
+                          UserRole.admin)
                         IconButton(
                           tooltip: 'Admin Dashboard',
                           onPressed: () => context.go('/admin'),
-                          icon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFF009B8E)),
+                          icon: const Icon(Icons.admin_panel_settings_outlined,
+                              color: Color(0xFF009B8E)),
                         ),
                       OutlinedButton.icon(
                         onPressed: () => context.go('/prescription'),
@@ -171,104 +171,107 @@ class MedicineScreen extends ConsumerWidget {
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: Image.network(
-                                    medicalImages.isNotEmpty 
-                                      ? medicalImages[index % medicalImages.length] 
-                                      : medicine.imageUrl,
+                                    medicalImages.isNotEmpty
+                                        ? medicalImages[
+                                            index % medicalImages.length]
+                                        : medicine.imageUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        const Icon(Icons.medication_liquid, size: 44),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(Icons.medication_liquid,
+                                                size: 44),
                                   ),
                                 ),
                               ),
-                            const SizedBox(height: 10),
-                            Text(
-                              medicine.brand,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              medicine.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
+                              const SizedBox(height: 10),
+                              Text(
+                                medicine.brand,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
-                            ),
-                            Text(
-                              medicine.category,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.labelSmall,
-                            ),
-                            if (medicine.prescriptionRequired) ...[
-                              const SizedBox(height: 4),
-                              DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFEF3C7),
-                                  borderRadius: BorderRadius.circular(4),
+                              Text(
+                                medicine.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
                                 ),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 3,
+                              ),
+                              Text(
+                                medicine.category,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                              if (medicine.prescriptionRequired) ...[
+                                const SizedBox(height: 4),
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFEF3C7),
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: Text(
-                                    'Rx required',
-                                    style: TextStyle(
-                                      color: Color(0xFF92400E),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w800,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 3,
+                                    ),
+                                    child: Text(
+                                      'Rx required',
+                                      style: TextStyle(
+                                        color: Color(0xFF92400E),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
                                   ),
                                 ),
+                              ],
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Rs. ${medicine.price.toStringAsFixed(0)}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Rs. ${medicine.mrp.toStringAsFixed(0)}',
+                                          style: const TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              SizedBox(
+                                width: double.infinity,
+                                child: FilledButton(
+                                  onPressed: medicine.inStock
+                                      ? () => ref
+                                          .read(
+                                            cartControllerProvider.notifier,
+                                          )
+                                          .add(medicine)
+                                      : null,
+                                  child: const Text('Add'),
+                                ),
                               ),
                             ],
-                            const SizedBox(height: 6),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Rs. ${medicine.price.toStringAsFixed(0)}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        'Rs. ${medicine.mrp.toStringAsFixed(0)}',
-                                        style: const TextStyle(
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: double.infinity,
-                              child: FilledButton(
-                                onPressed: medicine.inStock
-                                    ? () => ref
-                                        .read(
-                                          cartControllerProvider.notifier,
-                                        )
-                                        .add(medicine)
-                                    : null,
-                                child: const Text('Add'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
