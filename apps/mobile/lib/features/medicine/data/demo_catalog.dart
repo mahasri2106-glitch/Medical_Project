@@ -28,7 +28,8 @@ const demoMedicines = [
     sideEffects: ['Nausea', 'Stomach discomfort'],
     safetyAdvice: 'Take after food and do not exceed the advised dose.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/paracetamol/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/139398/pexels-photo-139398.jpeg',
   ),
   Medicine(
     id: 'prod-002',
@@ -45,7 +46,8 @@ const demoMedicines = [
     sideEffects: ['Diarrhea', 'Nausea'],
     safetyAdvice: 'Use only with a valid prescription.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/azithromycin/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/593451/pexels-photo-593451.jpeg',
   ),
   Medicine(
     id: 'prod-003',
@@ -62,7 +64,8 @@ const demoMedicines = [
     sideEffects: ['Drowsiness', 'Dry mouth'],
     safetyAdvice: 'Avoid driving if you feel sleepy.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/cetirizine/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/593451/pexels-photo-593451.jpeg',
   ),
   Medicine(
     id: 'prod-004',
@@ -79,7 +82,8 @@ const demoMedicines = [
     sideEffects: ['Constipation', 'Weakness if overused'],
     safetyAdvice: 'Usually taken weekly, follow your doctor schedule.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/vitamin-d3/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/7615460/pexels-photo-7615460.jpeg',
   ),
   Medicine(
     id: 'prod-005',
@@ -96,7 +100,8 @@ const demoMedicines = [
     sideEffects: ['Headache', 'Flatulence'],
     safetyAdvice: 'Best taken before food.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/pantoprazole/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/4021779/pexels-photo-4021779.jpeg',
   ),
   Medicine(
     id: 'prod-006',
@@ -113,7 +118,8 @@ const demoMedicines = [
     sideEffects: ['Low blood sugar', 'Injection site reaction'],
     safetyAdvice: 'Store refrigerated and use under medical supervision.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/insulin/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/208512/pexels-photo-208512.jpeg',
   ),
   Medicine(
     id: 'prod-007',
@@ -130,7 +136,8 @@ const demoMedicines = [
     sideEffects: ['Ankle swelling', 'Dizziness'],
     safetyAdvice: 'Take at the same time each day.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/amlodipine/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/593451/pexels-photo-593451.jpeg',
   ),
   Medicine(
     id: 'prod-008',
@@ -147,7 +154,8 @@ const demoMedicines = [
     sideEffects: ['Mild stomach upset'],
     safetyAdvice: 'Take after meals.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/multivitamin/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/7615460/pexels-photo-7615460.jpeg',
   ),
   Medicine(
     id: 'prod-009',
@@ -164,7 +172,8 @@ const demoMedicines = [
     sideEffects: ['Drowsiness', 'Dry mouth'],
     safetyAdvice: 'Measure dose with the supplied cup.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/cough-syrup/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/3683107/pexels-photo-3683107.jpeg',
   ),
   Medicine(
     id: 'prod-010',
@@ -181,6 +190,7 @@ const demoMedicines = [
     sideEffects: ['Bloating if overused'],
     safetyAdvice: 'Dissolve in clean drinking water.',
     manufacturer: 'MedBill Pharmacy',
-    imageUrl: 'https://picsum.photos/seed/ors/480/480',
+    imageUrl:
+        'https://images.pexels.com/photos/593451/pexels-photo-593451.jpeg',
   ),
 ];

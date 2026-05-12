@@ -36,11 +36,13 @@ class Medicine {
   bool get inStock => stock > 0;
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
+    final category = (json['category'] ?? 'General').toString();
+
     return Medicine(
       id: (json['id'] ?? json['_id'] ?? '').toString(),
       name: (json['name'] ?? '').toString(),
       brand: (json['brand'] ?? 'MedBill').toString(),
-      category: (json['category'] ?? 'General').toString(),
+      category: category,
       composition: (json['composition'] ?? '').toString(),
       price: (json['price'] as num? ?? 0).toDouble(),
       mrp: (json['mrp'] as num? ?? json['price'] as num? ?? 0).toDouble(),
@@ -52,9 +54,7 @@ class Medicine {
       safetyAdvice: (json['safetyAdvice'] ?? 'Use as directed by a physician.')
           .toString(),
       manufacturer: (json['manufacturer'] ?? 'MedBill Pharmacy').toString(),
-      imageUrl: (json['imageUrl'] ??
-              _imageForId((json['id'] ?? json['_id'] ?? '').toString()))
-          .toString(),
+      imageUrl: (json['imageUrl'] ?? _imageForCategory(category)).toString(),
     );
   }
 
@@ -62,11 +62,28 @@ class Medicine {
     if (value is List) {
       return value.map((item) => item.toString()).toList();
     }
+
     return const [];
   }
 
-  static String _imageForId(String id) {
-    final seed = id.isEmpty ? 'medicine' : id;
-    return 'https://picsum.photos/seed/$seed/480/480';
+  static String _imageForCategory(String category) {
+    switch (category.toLowerCase()) {
+      case 'cold':
+      case 'cold & cough':
+        return 'https://images.pexels.com/photos/3683107/pexels-photo-3683107.jpeg';
+      case 'fever':
+      case 'pain':
+      case 'fever & pain':
+        return 'https://images.pexels.com/photos/139398/pexels-photo-139398.jpeg';
+      case 'diabetes':
+        return 'https://images.pexels.com/photos/208512/pexels-photo-208512.jpeg';
+      case 'vitamins':
+        return 'https://images.pexels.com/photos/7615460/pexels-photo-7615460.jpeg';
+      case 'acidity':
+      case 'digestion':
+        return 'https://images.pexels.com/photos/4021779/pexels-photo-4021779.jpeg';
+      default:
+        return 'https://images.pexels.com/photos/593451/pexels-photo-593451.jpeg';
+    }
   }
 }

@@ -9,7 +9,6 @@ import '../../../core/widgets/section_header.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../cart/presentation/cart_controller.dart';
 import '../data/demo_catalog.dart';
-import '../data/medicine_image_service.dart';
 import '../data/medicine_repository.dart';
 
 class MedicineScreen extends ConsumerWidget {
@@ -19,7 +18,6 @@ class MedicineScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final medicinesState = ref.watch(medicinesProvider);
     final medicines = medicinesState.value ?? demoMedicines;
-    final medicalImages = ref.watch(medicalImagesProvider).value ?? [];
     final selectedCategory = ref.watch(medicineCategoryProvider);
 
     return MediScanScaffold(
@@ -60,8 +58,10 @@ class MedicineScreen extends ConsumerWidget {
                         IconButton(
                           tooltip: 'Admin Dashboard',
                           onPressed: () => context.go('/admin'),
-                          icon: const Icon(Icons.admin_panel_settings_outlined,
-                              color: Color(0xFF009B8E)),
+                          icon: const Icon(
+                            Icons.admin_panel_settings_outlined,
+                            color: Color(0xFF009B8E),
+                          ),
                         ),
                       OutlinedButton.icon(
                         onPressed: () => context.go('/prescription'),
@@ -171,15 +171,14 @@ class MedicineScreen extends ConsumerWidget {
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: Image.network(
-                                    medicalImages.isNotEmpty
-                                        ? medicalImages[
-                                            index % medicalImages.length]
-                                        : medicine.imageUrl,
+                                    medicine.imageUrl,
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
-                                            const Icon(Icons.medication_liquid,
-                                                size: 44),
+                                            const Icon(
+                                      Icons.medication_liquid,
+                                      size: 44,
+                                    ),
                                   ),
                                 ),
                               ),
