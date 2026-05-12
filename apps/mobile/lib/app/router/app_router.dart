@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/data/auth_repository.dart';
 import '../../features/auth/presentation/auth_screen.dart';
 import '../../features/cart/presentation/cart_screen.dart';
 import '../../features/checkout/presentation/checkout_screen.dart';
@@ -18,8 +19,20 @@ import '../../features/records/presentation/records_screen.dart';
 import '../../features/admin/presentation/admin_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authControllerProvider);
+
   return GoRouter(
     initialLocation: '/auth',
+    redirect: (context, state) {
+      final isLoggedIn = authState.value != null;
+      final isAuthPath = state.matchedLocation == '/auth';
+
+      if (!isLoggedIn && !isAuthPath) return '/auth';
+      if (isLoggedIn && isAuthPath) {
+        return authState.value!.role == UserRole.admin ? '/admin' : '/';
+      }
+      return null;
+    },
     routes: [
       GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
       GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),

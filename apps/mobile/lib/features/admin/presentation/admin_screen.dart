@@ -41,7 +41,7 @@ class AdminScreen extends ConsumerWidget {
                   const Icon(Icons.analytics, size: 48),
                   const SizedBox(height: 12),
                   Text(
-                    'Welcome, Admin',
+                    'Welcome, ${ref.watch(authControllerProvider).value?.name ?? 'Admin'}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
